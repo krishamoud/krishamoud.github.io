@@ -30,7 +30,7 @@ I am not a great designer and I don't pretend to be.  However, I have wanted to 
 
 ### Step 1: Structuring the application
 
-In your terminal run `meteor create facebook` then remove the files `facebook.html`, `facebook.js`, and `facebook.css` then make sure you add twitter-bootstrap to your project by running `meteor add twbs:bootstrap` followed by creating a file structure like the one outlined below.\\
+In your terminal run `meteor create facebook` then remove the files `facebook.html`, `facebook.js`, and `facebook.css` then make sure you add twitter-bootstrap to your project by running `meteor add twbs:bootstrap` followed by creating a file structure like the one outlined below.  
 I use the same basic file structure for all of my meteor apps.
 
     client/
@@ -51,16 +51,16 @@ I use the same basic file structure for all of my meteor apps.
       models/
       publications/
 
-Now to just get it out of the way now add [this](https://github.com/krishamoud/meteor-facebook/blob/master/client/css/facebook.css) css file to `client/css/` **This is the only place where I will mention css** \\
+Now to just get it out of the way now add [this](https://github.com/krishamoud/meteor-facebook/blob/master/client/css/facebook.css) css file to `client/css/` **This is the only place where I will mention css**  
 Great!  Now that we got that out of the way we can get to the fun stuff.  
 
 ### Step 2: Account Creation and Login
 
 Every website needs a way to register.  This used to be hard but meteor makes it easy.
-I used the `accounts-password` package built by MDG to make the login.\\ 
-In your terminal run `meteor add accounts-password` or go to `.meteor/packages` and add to the file `accounts-password`\\
-Now we have all the methods necessary to build a register/login system.\\
-In `client/views/` we need to make a `main.html` file and a `main.js`.\\
+I used the `accounts-password` package built by MDG to make the login.  
+In your terminal run `meteor add accounts-password` or go to `.meteor/packages` and add to the file `accounts-password`  
+Now we have all the methods necessary to build a register/login system.  
+In `client/views/` we need to make a `main.html` file and a `main.js`.  
 `main.html` should look like this
 
 {% highlight html %}
@@ -72,12 +72,13 @@ In `client/views/` we need to make a `main.html` file and a `main.js`.\\
 </head>
 {% endhighlight %}
 
-Nothing crazy.  \\Next we need to get a way to render templates based on route.  I used [iron-router](https://github.com/iron-meteor/iron-router) for this project although recently [flow-router](https://github.com/meteorhacks/flow-router) has gained some popularity.\\
+Nothing crazy.  
+Next we need to get a way to render templates based on route.  I used [iron-router](https://github.com/iron-meteor/iron-router) for this project although recently [flow-router](https://github.com/meteorhacks/flow-router) has gained some popularity.  
 Add it the same way you did the `accounts-password` package.  
 
 `meteor add iron:router`
 
-Now that we have that we are going to route `login` and `register` to the correct templates.\\
+Now that we have that we are going to route `login` and `register` to the correct templates.  
 I put my router code in the `lib/` folder because iron-router allows for server side routing and if you run it in the `client/` folder then you lose the server side functionality.  So create a file `lib/router.js` then add the following code.
 
 {% highlight javascript %}
@@ -90,13 +91,13 @@ Router.route('/login',{
 })
 {% endhighlight %}
 
-Now we have to actually create these templates.\\
+Now we have to actually create these templates.  
 I am very partial to having one folder per template which (in my opinion) should have exactly two files in it.
 * 1: the html file
 * 2: the javascript file
 
-First we build the registration page.\\
-First create a folder `client/views/register`\\
+First we build the registration page.  
+First create a folder `client/views/register`  
 Then create the files `client/views/register/register.html`, `client/views/register/register.js` 
 
 
@@ -159,7 +160,7 @@ Then create the files `client/views/register/register.html`, `client/views/regis
 </template>
 {% endhighlight %}
 
-This again is nothing crazy.\\
+This again is nothing crazy.  
 The javascript that correlates to this page.
 
 {% highlight javascript %}
@@ -197,11 +198,11 @@ Template.register.events({
     }
 })
 {% endhighlight %}
-This isn't crazy either but essentially what is happening is the template `register` is listening for a submit event from the signup form.\\
-Inside the function we first get the users information (i.e. email, firstname, etc) then create a username that is just the first and last name put together (this is for demonstration purposes only).\\
-After that we go into a try/catch statement that does some basic validation.  A user must have an email, firstname, lastname, and their password must be greter than 6 characters long.\\
-After it passes all of these checks it calls a method from the `accounts` package called `createUser` which takes alll that info and creates a user out of it.  It will either return an error as the first argument or the newly created userId as the second argument.\\
-If there are no errors then iron-router will route us to the `"/"` route which we have not yet defined.\\
-This page is now done.\\
+This isn't crazy either but essentially what is happening is the template `register` is listening for a submit event from the signup form.  
+Inside the function we first get the users information (i.e. email, firstname, etc) then create a username that is just the first and last name put together (this is for demonstration purposes only).  
+After that we go into a try/catch statement that does some basic validation.  A user must have an email, firstname, lastname, and their password must be greter than 6 characters long.  
+After it passes all of these checks it calls a method from the `accounts` package called `createUser` which takes alll that info and creates a user out of it.  It will either return an error as the first argument or the newly created userId as the second argument.  
+If there are no errors then iron-router will route us to the `"/"` route which we have not yet defined.  
+This page is now done.  
 
 **To be continued**
