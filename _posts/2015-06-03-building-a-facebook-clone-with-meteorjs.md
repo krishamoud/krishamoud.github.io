@@ -10,7 +10,8 @@ tags: [facebook, meteor, tutorial]
 
 ## Goals
 
-We must first define the features that facebook has that we would like to recreate.  
+We must first define the features that facebook has that we would like to recreate. 
+
 * A user must be able to sign up and then be able to log in
 * A user must have a profile page
 * A user must be able to make a post (similar to a blog) and also be flexible enough to post to other peoples "walls"
@@ -19,6 +20,7 @@ We must first define the features that facebook has that we would like to recrea
 
 
 Things currently not included in this tutorial
+
 * Picture uploader (probably soon to come)
 * editing profile details (definitely soon to come)
 
