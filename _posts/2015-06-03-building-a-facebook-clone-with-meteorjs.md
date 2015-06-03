@@ -71,14 +71,14 @@ Now we have all the methods necessary to build a register/login system.
 In `client/views/` we need to make a `main.html` file and a `main.js`.
 `main.html` should look like this
 
-```html
+{% highlight html %}
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>Facebook Theme Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
-````
+{# endhighlight %}
 
 Nothing crazy.
 
@@ -94,7 +94,7 @@ Now that we have that we are going to route `login` and `register` to the correc
 
 I put my router code in the `lib/` folder because iron-router allows for server side routing and if you run it in the `client/` folder then you lose the server side functionality.  So create a file `lib/router.js` then add the following code.
 
-```javascript
+{% highlight javascript %}
 Router.route('/register',{
     template:"register"
 });
@@ -102,7 +102,7 @@ Router.route('/register',{
 Router.route('/login',{
     template:"login"
 })
-```
+{% endhighlight %}
 
 Now we have to actually create these templates.
 
