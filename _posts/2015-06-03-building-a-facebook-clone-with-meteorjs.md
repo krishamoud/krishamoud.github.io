@@ -203,5 +203,4 @@ After that we go into a try/catch statement that does some basic validation.  A 
 After it passes all of these checks it calls a method from the `accounts` package called `createUser` which takes alll that info and creates a user out of it.  It will either return an error as the first argument or the newly created userId as the second argument.  
 If there are no errors then iron-router will route us to the `"/"` route which we have not yet defined.  
 This page is now done.  
-
 **To be continued**
