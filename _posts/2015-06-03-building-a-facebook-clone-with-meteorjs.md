@@ -115,7 +115,7 @@ First create a folder `client/views/register`
 Then create the files `client/views/register/register.html`, `client/views/register/register.js`
 
 
-````html
+{% highlight html %}
 <template name="register">
     <div class="container">
         <div id="signupbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
@@ -172,12 +172,12 @@ Then create the files `client/views/register/register.html`, `client/views/regis
         </div>
     </div>
 </template>
-```
+{% endhighlight %}
 
 This again is nothing crazy.
 
 The javascript that correlates to this page.
-```javascript
+{% highlight javascript %}
 // ----------------------------------------------------------------------------
 // @Date: 
 // @author: 
@@ -211,7 +211,7 @@ Template.register.events({
         }
     }
 })
-```
+{% endhighlight %}
 This isn't crazy either but essentially what is happening is the template `register` is listening for a submit event from the signup form.  
 
 Inside the function we first get the users information (i.e. email, firstname, etc) then create a username that is just the first and last name put together (this is for demonstration purposes only).  
