@@ -17,6 +17,8 @@ We must first define the features that facebook has that we would like to recrea
 * A user must be able to make a post (similar to a blog) and also be flexible enough to post to other peoples "walls"
 * A user must be able to make friend requests
 * A user must be able to view a "feed" of activity going on with his or her friends.
+
+
 Things currently not included in this tutorial
 
 * Picture uploader (probably soon to come)
