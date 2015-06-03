@@ -75,9 +75,7 @@ In `client/views/` we need to make a `main.html` file and a `main.js`.
 Nothing crazy.  
 Next we need to get a way to render templates based on route.  I used [iron-router](https://github.com/iron-meteor/iron-router) for this project although recently [flow-router](https://github.com/meteorhacks/flow-router) has gained some popularity.  
 Add it the same way you did the `accounts-password` package.  
-
-`meteor add iron:router`
-
+`meteor add iron:router`  
 Now that we have that we are going to route `login` and `register` to the correct templates.  
 I put my router code in the `lib/` folder because iron-router allows for server side routing and if you run it in the `client/` folder then you lose the server side functionality.  So create a file `lib/router.js` then add the following code.
 
@@ -93,6 +91,7 @@ Router.route('/login',{
 
 Now we have to actually create these templates.  
 I am very partial to having one folder per template which (in my opinion) should have exactly two files in it.
+
 * 1: the html file
 * 2: the javascript file
 
