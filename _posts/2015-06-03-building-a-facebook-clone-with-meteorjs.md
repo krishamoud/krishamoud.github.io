@@ -1,29 +1,23 @@
 ---
 layout: post
-title: Sample Post
-excerpt: "Just about everything you'll need to style in the theme: headings, paragraphs, blockquotes, tables, code blocks, and more."
+title: Building Facebook with Meteor in an Afternoon
+excerpt: "From nothing to facebook in a few hours"
 modified: 2013-05-31
-tags: [intro, beginner, jekyll, tutorial]
-comments: true
-image:
-  feature: sample-image-5.jpg
-  credit: WeGraphics
-  creditlink: http://wegraphics.net/downloads/free-ultimate-blurred-background-pack/
+tags: [facebook, meteor, tutorial]
 ---
 
-<section id="table-of-contents" class="toc">
-  <header>
-    <h3>Overview</h3>
-  </header>
-<div id="drawer" markdown="1">
-*  Auto generated table of contents
-{:toc}
-</div>
-</section><!-- /#table-of-contents -->
+## Goals
 
-## HTML Elements
+We must first define the features that facebook has that we would like to recreate.  
 
-Below is just about everything you'll need to style in the theme. Check the source code to see the many embedded elements within paragraphs.
+* A user must be able to sign up and then be able to log in
+* A user must be able to make a post (similar to a blog)
+* A user must be able to make friend requests
+* A user must be able to view a "feed" of activity going on with his or her friends.
+
+Things currently not included in this tutorial
+* Picture uploader (probably soon to come)
+* editing profile details (definitely soon to come)
 
 # Heading 1
 
