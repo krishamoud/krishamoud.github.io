@@ -78,7 +78,7 @@ In `client/views/` we need to make a `main.html` file and a `main.js`.
     <title>Facebook Theme Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
-{# endhighlight %}
+{% endhighlight %}
 
 Nothing crazy.
 
