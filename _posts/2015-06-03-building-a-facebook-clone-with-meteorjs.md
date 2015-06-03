@@ -17,7 +17,6 @@ We must first define the features that facebook has that we would like to recrea
 * A user must be able to make a post (similar to a blog) and also be flexible enough to post to other peoples "walls"
 * A user must be able to make friend requests
 * A user must be able to view a "feed" of activity going on with his or her friends.
-
 Things currently not included in this tutorial
 
 * Picture uploader (probably soon to come)
@@ -25,11 +24,12 @@ Things currently not included in this tutorial
 
 ## Before we begin
 
-I am not a great designer and I don't pretend to be.  However, I have wanted to make this tutorial for a while so I went and found a great [Twitter Bootstrap 3 Facebook template](http://www.bootply.com/render/96266) that I used to create this.  You should download it before you go any further in this tutorial.  This tutorial assumes you have meteor installed in your dev environment.
+I am not a great designer and I don't pretend to be.  However, I have wanted to make this tutorial for a while so I went and found a great [Twitter Bootstrap 3 Facebook template](http://www.bootply.com/render/96266) that I used to create this.  You should download it before you go any further in this tutorial. This tutorial assumes you have meteor installed in your dev environment.
 
 ### Step 1: Structuring the application
 
 In your terminal run `meteor create facebook` then remove the files `facebook.html`, `facebook.js`, and `facebook.css` then make sure you add twitter-bootstrap to your project by running `meteor add twbs:bootstrap` followed by creating a file structure like the one outlined below.
+
 
 I use the same basic file structure for all of my meteor apps.
 
@@ -53,6 +53,7 @@ I use the same basic file structure for all of my meteor apps.
 
 Now to just get it out of the way now add [this](https://github.com/krishamoud/meteor-facebook/blob/master/client/css/facebook.css) css file to `client/css/` **This is the only place where I will mention css** 
 
+
 Great!  Now that we got that out of the way we can get to the fun stuff.  
 
 ### Step 2: Account Creation and Login
@@ -60,9 +61,12 @@ Great!  Now that we got that out of the way we can get to the fun stuff.
 Every website needs a way to register.  This used to be hard but meteor makes it easy.
 I used the `accounts-password` package built by MDG to make the login.
 
+
 In your terminal run `meteor add accounts-password` or go to `.meteor/packages` and add to the file `accounts-password`
 
+
 Now we have all the methods necessary to build a register/login system.
+
 
 In `client/views/` we need to make a `main.html` file and a `main.js`.
 `main.html` should look like this
@@ -78,7 +82,9 @@ In `client/views/` we need to make a `main.html` file and a `main.js`.
 
 Nothing crazy.
 
+
 Next we need to get a way to render templates based on route.  I used [iron-router](https://github.com/iron-meteor/iron-router) for this project although recently [flow-router](https://github.com/meteorhacks/flow-router) has gained some popularity.  
+
 
 Add it the same way you did the `accounts-password` package.
 
@@ -107,6 +113,7 @@ I am very partial to having one folder per template which (in my opinion) should
 First we build the registration page.
 First create a folder `client/views/register`
 Then create the files `client/views/register/register.html`, `client/views/register/register.js`
+
 
 ````html
 <template name="register">
