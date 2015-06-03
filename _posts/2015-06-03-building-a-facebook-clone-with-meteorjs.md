@@ -31,6 +31,7 @@ I am not a great designer and I don't pretend to be.  However, I have wanted to 
 ### Step 1: Structuring the application
 
 In your terminal run `meteor create facebook` then remove the files `facebook.html`, `facebook.js`, and `facebook.css` then make sure you add twitter-bootstrap to your project by running `meteor add twbs:bootstrap` followed by creating a file structure like the one outlined below.  
+  
 I use the same basic file structure for all of my meteor apps.
 
     client/
