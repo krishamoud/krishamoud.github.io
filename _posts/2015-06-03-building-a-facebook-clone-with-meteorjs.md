@@ -6,7 +6,7 @@ modified: 2013-05-31
 tags: [facebook, meteor, tutorial]
 ---
 
-> *Almost nothing is as bad as it first seems*
+> *"Nothing is particularly hard if you divide it into small jobs." – Henry Ford*
 
 ## Goals
 
