@@ -24,5 +24,7 @@ Things currently not included in this tutorial
 
 ## Before we begin
 
-I have been wanting to make this 
+I am not a great designer and I don't pretend to be.  However, I have wanted to make this tutorial for a while so I went and found a great [Twitter Bootstrap 3 Facebook template](http://www.bootply.com/render/96266) that I used to create this.  You should download it and I will walk you through how I decided to set up the file structure.
+
+
 
