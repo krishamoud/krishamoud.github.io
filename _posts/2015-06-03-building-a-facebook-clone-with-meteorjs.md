@@ -544,7 +544,7 @@ If you didn't notice, we have **two** different helper methods in here as well a
 
 `<img src="{% raw %} {{currentUser.profile.picture.thumbnail}}{% endraw %}" height="28px" width="28px" alt="">` is doing something similar.
 
-The two methods of interest are `{{fullname currentUser}}` and `{{friendRequestCount}}`.  Let's define those now.
+The two methods of interest are {% raw %}{{fullname currentUser}}{% endraw %} and {% raw %}{{friendRequestCount}}{% endraw %}.  Let's define those now.
 
 {% highlight javascript %}
 // ----------------------------------------------------------------------------
