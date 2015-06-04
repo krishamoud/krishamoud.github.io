@@ -26,7 +26,7 @@ Things currently not included in this tutorial
 
 ## Before we begin
 
-I am not a great designer and I don't pretend to be.  However, I have wanted to make this tutorial for a while so I went and found a great [Twitter Bootstrap 3 Facebook template](http://www.bootply.com/render/96266) that I used to create this.  You should download it before you go any further in this tutorial. This tutorial assumes you have meteor installed in your dev environment.
+I am not a great designer and I don't pretend to be.  However, I have wanted to make this tutorial for a while so I went and found a great [Twitter Bootstrap 3 Facebook template](http://www.bootply.com/render/96266) that I used to create this.  You should download it before you go any further in this tutorial. This tutorial assumes you have meteor installed in your dev environment.  It is also assuming you understand some basics about meteor.
 
 ### Step 1: Structuring the application
 
@@ -55,7 +55,7 @@ Now to just get it out of the way now add [this](https://github.com/krishamoud/m
 
 Great!  Now that we got that out of the way we can get to the fun stuff.  
 
-### Step 2: Account Creation and Login
+### Step 2: Account Creation
 
 Every website needs a way to register.  This used to be hard but meteor makes it easy.
 I used the `accounts-password` package built by MDG to make the login.  
@@ -94,6 +94,8 @@ Router.route('/login',{
     template:"login"
 })
 {% endhighlight %}
+
+All this is doing is saying "When a user hits the route '/login' render the 'login' template" and same for the registration page.
 
 Now we have to actually create these templates.
 
@@ -218,4 +220,90 @@ After it passes all of these checks it calls a method from the `accounts` packag
 If there are no errors then iron-router will route us to the `"/"` route which we have not yet defined.  
 
 This page is now done.  
-**To be continued**
+
+### Step 3: Login page
+
+A user can now create an account.  Now they have to be able to log in.  
+
+Create a folder `client/views/login` and again add two files to it. `login.html` and `login.js`
+
+`login.html` will also not be a big deal.
+
+{% highlight html %}
+<template name="login">
+    <div class="container">
+        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Sign In</div>
+                    <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot password?</a></div>
+                </div>
+                <div style="padding-top:30px" class="panel-body">
+                    <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+                    <form id="loginform" class="form-horizontal">
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email">
+                        </div>
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+                        </div>
+                        <div class="input-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+                                </label>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px" class="form-group">
+                            <!-- Button -->
+
+                            <div class="col-sm-12 controls">
+                                <button id="btn-login" href="#" type='submit' class="btn btn-success">Login  </button>
+                                <a id="btn-fblogin" href="#" class="btn btn-primary">Login with Facebook</a>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12 control">
+                                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
+                                    Don't have an account!
+                                    <a href="/register">
+                                        Sign Up Here
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+{% endhighlight %}
+
+This is just a bootstrap page with a form on it.
+
+`login.js` will be just as boring.
+{% highlight javascript %}
+Template.login.events({
+    'submit #loginform':function(e){
+        e.preventDefault();
+        var username = $('input[name="username"]').val();
+        var password = $('input[name="password"]').val();
+        Meteor.loginWithPassword(username,password, function(err){
+            if(!err) {
+                Router.go("/")
+            }
+        })
+    }
+})
+{% endhighlight %}
+The template `login` is listening for a submit even from the `#login` form finding the username, password then calling a meteor method called `loginWithPassword` which takes two arguments, `username` and `password` then has a callback function that's called with no arguments on success or a single error argument on failure.
+
+Great!  We now have fully functioning login and registration for our soon to be facebook clone.
+
+## Profile page
+
+**to be continued**
