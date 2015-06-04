@@ -332,7 +332,7 @@ We need to think about what a profile will look like.  It will have a navbar, a 
 
 Create a folder `client/views/profile` and inside of that we are going to have **two** additional folders.  One is going to be the template where we show all of the profile users info and the other will be where we show all of the profile users "stories" or feed items.
 
-The folders that should be made are `client/views/profile/profileDetails` and `client/views/profile/profileFeed` which will both have two files in them each. `client/views/profile/profileFeed.html`, `client/views/profile/profileFeed.js`, `client/views/profile/profileDetails/profileDetails.html` and `client/views/profile/profileDetails/profileDetails.js`
+The folders that should be made are `client/views/profile/profileDetails` and `client/views/profile/profileFeed` which will both have two files in them each. `client/views/profile/profileFeed/profileFeed.html`, `client/views/profile/profileFeed/profileFeed.js`, `client/views/profile/profileDetails/profileDetails.html` and `client/views/profile/profileDetails/profileDetails.js`
 
 Since we defined `profileFeed` as the template where the router will take us then we should build that first.
 
@@ -344,7 +344,9 @@ Here is the html that I came up with
         <div class="box">
             <div class="row row-offcanvas row-offcanvas-left">
                 <!-- sidebar -->
+                {% raw %}
                 {{>sidebar}}
+                {% endraw %}
                 <!-- /sidebar -->
                 <!-- main right col -->
                 <div class="column col-sm-10 col-xs-11" id="main">
