@@ -633,12 +633,13 @@ The last template we need to make is the `profileDetails` template so that our `
          <div class="panel panel-default">
            <div class="panel-thumbnail"><img src="{{profilePicture}}" class="img-responsive"></div>
            <div class="panel-body">
-             <p class="lead">{{fullname}}</p>
-             <p>{{friendCount}} Friends</p>
+             <p class="lead">{% raw %}{{fullname}}{% endraw %}</p>
+             <p>{% raw %}{{friendCount}}{% endraw %} Friends</p>
              <p><button class="btn btn-primary add-friend">Add Friend</button></p>
              <p>
+                {% raw %}
                 {{#each newFriends}}
-                    <a href="/profile/{{this.profile.username}}"><img src="{{this.profile.picture.thumbnail}}" height="28px" width="28px"></a>
+                    <a href="/profile/{% raw %}{{this.profile.username}}{% endraw %}"><img src="{% raw %}{{this.profile.picture.thumbnail}}{% endraw %}" height="28px" width="28px"></a>
                 {{/each}}
              </p>
            </div>
@@ -648,7 +649,9 @@ The last template we need to make is the `profileDetails` template so that our `
          <div class="panel panel-default">
            <div class="panel-heading"><h4>About</h4></div>
              <div class="panel-body">
+                {% raw %}
                 {{about}}
+                {% endraw %}
              </div>
          </div>
 
