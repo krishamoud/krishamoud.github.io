@@ -639,7 +639,7 @@ The last template we need to make is the `profileDetails` template so that our `
              <p>
                 {% raw %}
                 {{#each newFriends}}
-                    <a href="/profile/{% raw %}{{this.profile.username}}{% endraw %}"><img src="{% raw %}{{this.profile.picture.thumbnail}}{% endraw %}" height="28px" width="28px"></a>
+                    <a href="/profile/{{this.profile.username}}"><img src="{{this.profile.picture.thumbnail}}" height="28px" width="28px"></a>
                 {{/each}}
                 {% endraw %}
              </p>
