@@ -314,7 +314,7 @@ The template `login` is listening for a submit even from the `#login` form findi
 Great!  We now have fully functioning login and registration for our soon to be facebook clone.
 
 
-### Faker.js (optional step)
+### Random Users (optional step)
 
 Now that we have a working login/registration setup, lets not use it.  I used [randomuser.me](https://randomuser.me/) to create a bunch of profiles so I could test out the network stuff that will come later.
 
@@ -357,7 +357,7 @@ Meteor.startup(function(){
 })
 {% endhighlight %}
 
-All this code is doing is checking if there are no users when the server starts.  If there are no users then it goes into a `for` loop making 100 http calls to the api endpoint, the response is a fake user.  I deleted the fields I didn't want or need then created a user object and used the built in meteor method `Accounts.createUser(user)` to create 100 accounts that would be the same. 
+All this code is doing is checking if there are no users when the server starts.  If there are no users then it goes into a `for` loop making 100 http calls to the api endpoint, the response is a fake user.  I deleted the fields I didn't want or need then created a user object and used the built in meteor method `Accounts.createUser(user)` to create 100 accounts that would have the same data structure. 
 
 Done.
 
@@ -451,6 +451,7 @@ Inside `client/views/common` we are going to create **three** folders.  `client/
 
 We should make those now so meteor doesn't yell at us.
 
+### Sidebar
 `client/views/common/sidebar.html`
 {% highlight html %}
 <template name="sidebar">
@@ -487,6 +488,7 @@ We should make those now so meteor doesn't yell at us.
 {% endhighlight %}
 This is directly stolen from the bootstrap theme.
 
+### Top Nav Bar
 `client/views/common/topnav.html`
 {% highlight html %}
 <template name="topnav">
@@ -540,5 +542,218 @@ If you didn't notice, we have **two** different helper methods in here as well a
 
 `<a href="/profile/{% raw %}{{currentUser.username}}{% endraw %}">` is doing nothing more than linking to the **currently signed in** users profile.  `currentUser` is a method that meteor has built for us in spacebars (meteor flavored handlebars) that gives us access to the current signed in user document.  
 
-`<img src="{% raw %} {{currentUser.profile.picture.thumbnail}}{% endraw %}" height="28px" width="28px" alt="">` is doing something similar.  I used faker.js to fake a bunch of users because it was easier than creating a bunch ma
+`<img src="{% raw %} {{currentUser.profile.picture.thumbnail}}{% endraw %}" height="28px" width="28px" alt="">` is doing something similar.
+
+The two methods of interest are `{% raw %} {{fullname currentUser}}{% endraw %}` and `{% raw %} {{friendRequestCount}} {% endraw %}`.  Let's define those now.
+
+{% highlight javascript %}
+// ----------------------------------------------------------------------------
+// @Date: 
+// @author: 
+// @description: This is where top nav stuff happens
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+// Template Event Map
+// ----------------------------------------------------------------------------
+Template.topnav.events({
+    'click .logout':function(){
+        Meteor.logout(function(err){
+            if(!err) {
+                Router.go("/");
+            }
+        })
+    }
+})
+
+
+// ----------------------------------------------------------------------------
+// Template Helper Map
+// ----------------------------------------------------------------------------
+Template.topnav.helpers({
+    fullname:function(user){
+        return user ? user.profile.name.first + " " + user.profile.name.last : null;
+    },
+    friendRequestCount:function(){
+        return 0;
+    }
+}
+{% endhighlight %}
+
+First you'll notice that I created an event for when the logout class is clicked.  It is straightforward.
+
+Next in the helpers we have some very basic methods.  `fullname` takes the current user as an argument and returns the first and last name combined.  You can do this in handlebars but I didn't want to keep typing the dot notation.  
+
+Second, we have `friendRequestCount` since we have no infrastructure for friends right now it will just return 0.  This will be modified soon.
+
+### Modal
+The last common template we need to define is the modal.  It looks like this.
+
+{% highlight html %}
+<template name="modal">
+    <!--post modal-->
+    <div id="postModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+                Update Status
+          </div>
+          <div class="modal-body">
+              <form class="form center-block">
+                <div class="form-group">
+                  <textarea class="form-control input-lg" autofocus="" name="new-post" placeholder="What do you want to share?"></textarea>
+                </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <div>
+              <button class="btn btn-primary btn-sm new-post" data-dismiss="modal" aria-hidden="true">Post</button>
+                <ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>
+              </div>
+          </div>
+      </div>
+      </div>
+    </div>
+</template>
+{% endhighlight %}
+
+Vanilla bootstrap.
+
+### Profile Details
+
+The last template we need to make is the `profileDetails` template so that our `profileFeed` template will render.
+
+`client/views/profile/profileDetails/profileDetails.html`
+{% highlight html %}
+<template name="profileDetails">
+    <!-- main col left -->
+    <div class="col-sm-5">
+
+         <div class="panel panel-default">
+           <div class="panel-thumbnail"><img src="{{profilePicture}}" class="img-responsive"></div>
+           <div class="panel-body">
+             <p class="lead">{{fullname}}</p>
+             <p>{{friendCount}} Friends</p>
+             <p><button class="btn btn-primary add-friend">Add Friend</button></p>
+             <p>
+                {{#each newFriends}}
+                    <a href="/profile/{{this.profile.username}}"><img src="{{this.profile.picture.thumbnail}}" height="28px" width="28px"></a>
+                {{/each}}
+             </p>
+           </div>
+         </div>
+
+
+         <div class="panel panel-default">
+           <div class="panel-heading"><h4>About</h4></div>
+             <div class="panel-body">
+                {{about}}
+             </div>
+         </div>
+
+
+
+         <div class="panel panel-default">
+           <div class="panel-heading"><h4>Some Header</h4></div>
+           <div class="panel-body">
+               Fill this with whatever you want
+            </div>
+         </div>
+     </div>
+</template>
+{% endhighlight %}
+
+Again more bootstrap but now we have some template helpers in there but none of them are using the `currentUser`.  Why not? Because it isn't gauranteed that the profile we are on is the same as the person who is currently signed in.  Let's define those helpers now!
+
+{% highlight javascript %}
+Template.profileDetails.helpers({
+    fullname:function(){
+        var username = Router.current().params.username;
+        var user = Meteor.users.findOne({username:username});
+        return user ? user.profile.name.first + " " + user.profile.name.last : null;
+    },
+    profilePicture:function() {
+        var username = Router.current().params.username;
+        var user = Meteor.users.findOne({username:username});
+        return user ? user.profile.picture.large : null;
+    },
+    friendCount:function(){
+        return 0;
+    },
+    newFriends:function(){
+        return [];
+    },
+    about:function(){
+        var username = Router.current().params.username;
+        var user = Meteor.users.findOne({username:username});
+                return user ? user.profile.location.street + " " +
+                              user.profile.location.city + ", " + user.profile.location.state + " " +   
+                              user.profile.location.zip : "";
+    },
+    storyCount:function(){
+        return 0;
+    }
+})
+
+
+Template.profileDetails.events({
+    'click .add-friend':function(){
+        // soon!
+    }
+})
+{% endhighlight %}
+
+Great!  Now we have the helpers defined.  The only problem is that our `Meteor.users.findOne()` calls are going to return undefined because we have not *published* the needed user documents.
+
+(Stories and friends return empty because we haven't built that yet)
+
+### Publishing User Documents
+
+Publishing to the client is a core feature of meteor and we need to know how to do it in order to do a lot of things in meteor.  We need profile user information but we don't want to give *too* much info.
+
+Publications happen on the server so let's make it happen.
+
+In `server/publications/` we should create a file called `userPublications.js`
+This file will get pretty long in the future but for right now we only need one publication and it's easy.
+{% highlight javascript %}
+Meteor.publish("userData", function(username){
+    return Meteor.users.find({username:username});
+})
+{% endhighlight %}
+You can restrict fields if you want but I was lazy and didn't.
+
+Now that we have the publication we now have to *subscribe* to it.
+This will happen on the client side.
+
+### Subscribing to User Documents
+In `client/views/profile/profileDetails/profileDetails.js` add the following code.
+{% highlight javascript %}
+Template.profileDetails.onCreated(function(){
+    var self = this;
+    var username = Router.current().params.username;
+    self.autorun(function(){
+        username = Router.current().params.username;
+        self.subscribe("userData", username, {
+            onReady:function(){
+                var user = Meteor.users.findOne({username: username});
+                self.subscribe("userFriendCount", user._id);
+                self.subscribe("userNewFriends", user._id);
+            }
+        });
+    })
+
+    self.autorun(function(){
+        if(Template.instance().subscriptionsReady()) {
+            var user = Meteor.users.findOne({username: username});
+            if(!user) {
+                Router.go("/");
+            }
+        }
+    })
+
+})
+{% endhighlight %}
+
+What's happening is actually pretty straightforward.  When the template is created an `autorun` function is called twice.  
 **to be continued**
