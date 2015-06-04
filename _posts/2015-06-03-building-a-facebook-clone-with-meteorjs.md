@@ -52,13 +52,16 @@ I use the same basic file structure for all of my meteor apps.
       publications/
 
 Now to just get it out of the way now add [this](https://github.com/krishamoud/meteor-facebook/blob/master/client/css/facebook.css) css file to `client/css/` **This is the only place where I will mention css**  
+
 Great!  Now that we got that out of the way we can get to the fun stuff.  
 
 ### Step 2: Account Creation and Login
 
 Every website needs a way to register.  This used to be hard but meteor makes it easy.
 I used the `accounts-password` package built by MDG to make the login.  
-In your terminal run `meteor add accounts-password` or go to `.meteor/packages` and add to the file `accounts-password`  
+In your terminal run `meteor add accounts-password` or go to `.meteor/packages` and add to the file
+`accounts-password`  
+
 Now we have all the methods necessary to build a register/login system.  
 In `client/views/` we need to make a `main.html` file and a `main.js`.  
 `main.html` should look like this
