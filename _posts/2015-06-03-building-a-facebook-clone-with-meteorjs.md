@@ -741,23 +741,100 @@ Template.profileDetails.onCreated(function(){
         self.subscribe("userData", username, {
             onReady:function(){
                 var user = Meteor.users.findOne({username: username});
-                self.subscribe("userFriendCount", user._id);
-                self.subscribe("userNewFriends", user._id);
+                if(!user) {
+                    Router.go("/");
+                }
             }
         });
-    })
-
-    self.autorun(function(){
-        if(Template.instance().subscriptionsReady()) {
-            var user = Meteor.users.findOne({username: username});
-            if(!user) {
-                Router.go("/");
-            }
-        }
     })
 
 })
 {% endhighlight %}
 
-What's happening is actually pretty straightforward.  When the template is created an `autorun` function is called twice.  
+What's happening is actually pretty straightforward.  When the template is created an `autorun` function is called once to subscribe on the current users profile.  Anytime the username in the router *changes* it is going to resubscribe because we are going to need the new users profile info.  If the user doesn't exist it will route us back to "/" which again we haven't defined yet.
+
+Great!  Now all of our helper functions work!
+
+### Creating Stories (status/post to friends wall)
+Our site is really coming along.  Believe it or not but this clone is almost done.
+
+Stories are actually incredibly easy to create.  
+
+#### Step 1: Define the Mongo Collection
+Since we want the collection to exist on both the client and server we need to define it in a neutral place.  I use the `lib/` folder.
+
+First create a file `lib/collections.js` and add one line to it.
+`Stories = new Mongo.Collection("stories");`
+Now we can create stories!
+
+The only problem is if we remove the `insecure` package that comes in every meteor application, anyone can CRUD our documents.  So first and formost, remove the `insecure` package from `.meteor/packages` and then we can use the built in Meteor `allow/deny` rules that look like this.
+{% highlight javascript %}
+Stories.allow({
+    insert:function(userId, doc) {
+        return !!userId;
+    },
+    update:function(userId, doc) {
+        return !!userId;
+    }
+})
+{% endhighlight %} 
+
+Any time a document is trying to be created, destroyed, or updated it will check these methods to see if it is allowed to do so.  
+
+These are super basic restrictions which you can edit to your hearts content but I just want to make sure that the user is signed in in order to create or update a `Story` document.
+
+I prefer to work in booleans so I use double-not notation to convert the type to booleans you can however simply do `return userId` and it will work the same (because undefined is a falsey value).
+
+#### Step 2: Creating a story from the profile page
+We have done nothing on `client/views/profile/profileFeed/profileFeed.js` so now we are going to!
+
+If we think about the way facebook works.  You can either post a status from your own page or if you are on someone else's page you can post to their page.  We are going to implement that now.
+
+{% highlight javascript %}
+Template.profileFeed.events({
+    'click .new-post':function(e){
+        e.preventDefault();
+        var profileUser = Meteor.users.findOne({username:Router.current().params.username});
+        var currentUser = Meteor.user();
+        var story = $('textarea[name="new-post"]').val();
+        if(story.length) {
+            Stories.insert({
+                createdBy: currentUser._id,
+                createdFor: profileUser._id,
+                userImage: currentUser.profile.picture.thumbnail,
+                storyImage: null,
+                storyText: story,
+                creatorName: currentUser.profile.name.first + " " + currentUser.profile.name.last,
+                creatorUsername: currentUser.profile.username,
+                creatorThumbnail: currentUser.profile.picture.thumbnail,
+                createdForName: profileUser.profile.name.first + " " + profileUser.profile.name.last,
+                createdForUsername: profileUser.profile.username,
+                createdForThumbnail: profileUser.profile.picture.thumbnail,
+                likes: [],
+                createdAt: new Date(),
+                comments: []
+            });
+            $('textarea[name="new-post"]').val("");
+        }
+
+    }
+
+})
+
+Template.profileFeed.helpers({
+    statusPlaceholder:function(){
+        var profileUser = Meteor.users.findOne({username:Router.current().params.username});
+        if(profileUser && profileUser._id === Meteor.userId()){
+            return "Update your status";
+        } else {
+            return "Post to their wall!";
+        }
+    },
+    stories:function(){
+        var profileUser = Meteor.users.findOne({username:Router.current().params.username}, {fields: {_id:1}});
+        return profileUser ? Stories.find({createdFor: profileUser._id}, {sort: {createdAt:-1}, limit: 10}) : [];
+    }
+
+})
+{% endhighlight %}
 **to be continued**
