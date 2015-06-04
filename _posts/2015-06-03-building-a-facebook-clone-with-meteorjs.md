@@ -28,7 +28,7 @@ Things currently not included in this tutorial
 
 I am not a great designer and I don't pretend to be.  However, I have wanted to make this tutorial for a while so I went and found a great [Twitter Bootstrap 3 Facebook template](http://www.bootply.com/render/96266) that I used to create this.  You should download it before you go any further in this tutorial. This tutorial assumes you have meteor installed in your dev environment.  It is also assuming you understand some basics about meteor.
 
-### Step 1: Structuring the application
+### Structuring the application
 
 In your terminal run `meteor create facebook` then remove the files `facebook.html`, `facebook.js`, and `facebook.css` then make sure you add twitter-bootstrap to your project by running `meteor add twbs:bootstrap` followed by creating a file structure like the one outlined below.  
 I use the same basic file structure for all of my meteor apps.
@@ -55,7 +55,7 @@ Now to just get it out of the way now add [this](https://github.com/krishamoud/m
 
 Great!  Now that we got that out of the way we can get to the fun stuff.  
 
-### Step 2: Account Creation
+### Account Creation
 
 Every website needs a way to register.  This used to be hard but meteor makes it easy.
 I used the `accounts-password` package built by MDG to make the login.  
@@ -221,7 +221,7 @@ If there are no errors then iron-router will route us to the `"/"` route which w
 
 This page is now done.  
 
-### Step 3: Login page
+### Login page
 
 A user can now create an account.  Now they have to be able to log in.  
 
@@ -287,6 +287,15 @@ This is just a bootstrap page with a form on it.
 
 `login.js` will be just as boring.
 {% highlight javascript %}
+// ----------------------------------------------------------------------------
+// @Date: 
+// @author: 
+// @description: This is where the user will login
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+// Template Event Map
+// ----------------------------------------------------------------------------
 Template.login.events({
     'submit #loginform':function(e){
         e.preventDefault();
@@ -304,6 +313,85 @@ The template `login` is listening for a submit even from the `#login` form findi
 
 Great!  We now have fully functioning login and registration for our soon to be facebook clone.
 
-## Profile page
+### Profile page
+
+This will be the first somewhat complicated page but we will build it in chunks and it wont be that bad.
+
+First we need a route.  
+
+Add this to your `lib/router.js` file.
+{% highlight javascript %}
+Router.route('/profile/:username',{
+    template:"profileFeed"
+});
+{% endhighlight %}
+
+This is basically saying that when someone routes to '/profile/anyRandomUsername` it will render the template profileFeed.
+
+We need to think about what a profile will look like.  It will have a navbar, a profile picture, profile details, and a "feed" of "stories" that involve the profile owner.
+
+Create a folder `client/views/profile` and inside of that we are going to have **two** additional folders.  One is going to be the template where we show all of the profile users info and the other will be where we show all of the profile users "stories" or feed items.
+
+The folders that should be made are `client/views/profile/profileDetails` and `client/views/profile/profileFeed` which will both have two files in them each. `client/views/profile/profileFeed.html`, `client/views/profile/profileFeed.js`, `client/views/profile/profileDetails/profileDetails.html` and `client/views/profile/profileDetails/profileDetails.js`
+
+Since we defined `profileFeed` as the template where the router will take us then we should build that first.
+
+Here is the html that I came up with 
+
+{% highlight html %}
+<template name="profileFeed">
+    <div class="wrapper">
+        <div class="box">
+            <div class="row row-offcanvas row-offcanvas-left">
+                <!-- sidebar -->
+                {{>sidebar}}
+                <!-- /sidebar -->
+                <!-- main right col -->
+                <div class="column col-sm-10 col-xs-11" id="main">
+                    <!-- top nav -->
+                    {{>topnav}}
+                    <!-- /top nav -->
+                    <div class="padding">
+                        <div class="full col-sm-9">
+                            <!-- content -->
+                            <div class="row">
+                                {{>profileDetails}}
+                                <!-- main col right -->
+                                <div class="col-sm-7">
+
+                                    <div class="well">
+                                        <form class="form-horizontal" role="form">
+                                            <h4>What's New</h4>
+                                            <div class="form-group" style="padding:14px;">
+                                                <textarea class="form-control" name="new-post" placeholder="Post a status!"></textarea>
+                                            </div>
+                                            <button class="btn btn-primary pull-right new-post" type="button">Post</button>
+                                            <ul class="list-inline">
+                                                <li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li>
+                                                <li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li>
+                                                <li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li>
+                                            </ul>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /main -->
+            </div>
+        </div>
+    </div>
+    {{>modal}}
+</template>
+{% endhighlight %}
+
+We have some templates in there that we have not defined yet, namely `sidebar`, `topnav`, `modal` and `profileDetails`.  Lets define those now.
+
+To avoid building up a cluttered `client/views/` folder I like to lump some of the more reusable templates together into a folder called `client/views/common` which is where I put things like `sidbar`, `topnav` and `modal` so to follow along you should create this folder as well.
+
+Inside `client/views/common` we are going to create **three** folders.  `client/views/common/modal`, `client/views/common/sidebar`, and `client/views/common/modal` which will each have two respective files in each the same as we have done with every other folder/file that we have defined.
+
 
 **to be continued**
