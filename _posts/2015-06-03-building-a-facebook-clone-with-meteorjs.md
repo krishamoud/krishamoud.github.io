@@ -313,6 +313,54 @@ The template `login` is listening for a submit even from the `#login` form findi
 
 Great!  We now have fully functioning login and registration for our soon to be facebook clone.
 
+
+### Faker.js (optional step)
+
+Now that we have a working login/registration setup, lets not use it.  I used [randomuser.me](https://randomuser.me/) to create a bunch of profiles so I could test out the network stuff that will come later.
+
+If you want to do the same here is what I did.
+
+First I added `http` to my `.meteor/packages` file so that I could make some request and create a bunch of users.
+
+Next in `server/lib/` I created a file called `startup.js` which then runs a function that runs when the meteor server first starts up.
+
+`server/lib/startup.js`
+{% highlight javascript %}
+Meteor.startup(function(){
+    var users = Meteor.users.find().count();
+    if(!users) {
+        for(var i = 0; i < 100; i++){
+            HTTP.get("http://api.randomuser.me/", function(err,res){
+                var fields = res.data.results[0].user;
+                delete fields['password'];
+                delete fields['salt'];
+                delete fields['md5'];
+                delete fields['sha1'];
+                delete fields['sha256'];
+                delete fields['registered'];
+                delete fields['dob'];
+                delete fields['HETU'];
+                delete fields['INSEE'];
+                delete fields['phone'];
+                delete fields['cell']
+                delete fields['version'];
+                var user = {
+                    username: fields.username,
+                    email: fields.email,
+                    password:"password",
+                    profile: fields
+                }
+                Accounts.createUser(user);
+            })
+        }
+    }
+})
+{% endhighlight %}
+
+All this code is doing is checking if there are no users when the server starts.  If there are no users then it goes into a `for` loop making 100 http calls to the api endpoint, the response is a fake user.  I deleted the fields I didn't want or need then created a user object and used the built in meteor method `Accounts.createUser(user)` to create 100 accounts that would be the same. 
+
+Done.
+
 ### Profile page
 
 This will be the first somewhat complicated page but we will build it in chunks and it wont be that bad.
@@ -351,13 +399,17 @@ Here is the html that I came up with
                 <!-- main right col -->
                 <div class="column col-sm-10 col-xs-11" id="main">
                     <!-- top nav -->
+                    {% raw %}
                     {{>topnav}}
+                    {% endraw %}
                     <!-- /top nav -->
                     <div class="padding">
                         <div class="full col-sm-9">
                             <!-- content -->
                             <div class="row">
+                                {% raw %}
                                 {{>profileDetails}}
+                                {% endraw %}
                                 <!-- main col right -->
                                 <div class="col-sm-7">
 
@@ -385,7 +437,9 @@ Here is the html that I came up with
             </div>
         </div>
     </div>
+    {% raw %}
     {{>modal}}
+    {% endraw %}
 </template>
 {% endhighlight %}
 
@@ -395,5 +449,96 @@ To avoid building up a cluttered `client/views/` folder I like to lump some of t
 
 Inside `client/views/common` we are going to create **three** folders.  `client/views/common/modal`, `client/views/common/sidebar`, and `client/views/common/modal` which will each have two respective files in each the same as we have done with every other folder/file that we have defined.
 
+We should make those now so meteor doesn't yell at us.
 
+`client/views/common/sidebar.html`
+{% highlight html %}
+<template name="sidebar">
+    <!-- sidebar -->
+    <div class="column col-sm-2 col-xs-1 sidebar-offcanvas" id="sidebar">
+
+        <ul class="nav">
+            <li><a href="#" data-toggle="offcanvas" class="visible-xs text-center"><i class="glyphicon glyphicon-chevron-right"></i></a></li>
+        </ul>
+
+        <ul class="nav hidden-xs" id="lg-menu">
+            <li class="active"><a href="#featured"><i class="glyphicon glyphicon-list-alt"></i> Featured</a></li>
+            <li><a href="#stories"><i class="glyphicon glyphicon-list"></i> Stories</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-paperclip"></i> Saved</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-refresh"></i> Refresh</a></li>
+        </ul>
+        <ul class="list-unstyled hidden-xs" id="sidebar-footer">
+            <li>
+              <a href="http://usebootstrap.com/theme/facebook"><h3>Bootstrap</h3> <i class="glyphicon glyphicon-heart-empty"></i> Bootply</a>
+            </li>
+        </ul>
+
+        <!-- tiny only nav-->
+      <ul class="nav visible-xs" id="xs-menu">
+            <li><a href="#featured" class="text-center"><i class="glyphicon glyphicon-list-alt"></i></a></li>
+            <li><a href="#stories" class="text-center"><i class="glyphicon glyphicon-list"></i></a></li>
+            <li><a href="#" class="text-center"><i class="glyphicon glyphicon-paperclip"></i></a></li>
+            <li><a href="#" class="text-center"><i class="glyphicon glyphicon-refresh"></i></a></li>
+        </ul>
+
+    </div>
+    <!-- /sidebar -->    
+</template>
+{% endhighlight %}
+This is directly stolen from the bootstrap theme.
+
+`client/views/common/topnav.html`
+{% highlight html %}
+<template name="topnav">
+    <div class="navbar navbar-blue navbar-static-top">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand logo">b</a>
+        </div>
+        <nav class="collapse navbar-collapse" role="navigation">
+            <form class="navbar-form navbar-left">
+                <div class="input-group input-group-sm" style="max-width:360px;">
+                    <input class="form-control" placeholder="Search" name="srch-term" id="srch-term" type="text">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/profile/{% raw %}{{currentUser.username}}{% endraw %}"><img src="{% raw %} {{currentUser.profile.picture.thumbnail}}{% endraw %}" height="28px" width="28px" alt="">{% raw %} {{fullname currentUser}}{% endraw %}</a>
+                </li>
+                <li>
+                    <a href="/"><i class="glyphicon glyphicon-home"></i> Home</a>
+                </li>
+                <li>
+                    <a href="#postModal" role="button" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i> Post</a>
+                </li>
+                <li>
+                    <a href="/notifications"><i class="glyphicon glyphicon-envelope"></i> <span class="badge">{% raw %} {{friendRequestCount}} {% endraw %}</span> Friend Requests</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i></a>
+                    <ul class="dropdown-menu">
+                        <li class="logout"><a href="#">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</template>
+{% endhighlight %}
+
+If you didn't notice, we have **two** different helper methods in here as well as some other handlebars stuff going on.  I'll tackle them one at a time.
+
+`<a href="/profile/{% raw %}{{currentUser.username}}{% endraw %}">` is doing nothing more than linking to the **currently signed in** users profile.  `currentUser` is a method that meteor has built for us in spacebars (meteor flavored handlebars) that gives us access to the current signed in user document.  
+
+`<img src="{% raw %} {{currentUser.profile.picture.thumbnail}}{% endraw %}" height="28px" width="28px" alt="">` is doing something similar.  I used faker.js to fake a bunch of users because it was easier than creating a bunch ma
 **to be continued**
