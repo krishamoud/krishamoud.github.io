@@ -447,7 +447,7 @@ We have some templates in there that we have not defined yet, namely `sidebar`, 
 
 To avoid building up a cluttered `client/views/` folder I like to lump some of the more reusable templates together into a folder called `client/views/common` which is where I put things like `sidbar`, `topnav` and `modal` so to follow along you should create this folder as well.
 
-Inside `client/views/common` we are going to create **three** folders.  `client/views/common/modal`, `client/views/common/sidebar`, and `client/views/common/modal` which will each have two respective files in each the same as we have done with every other folder/file that we have defined.
+Inside `client/views/common` we are going to create **three** folders.  `client/views/common/modal`, `client/views/common/sidebar`, and `client/views/common/topnav` which will each have two respective files in each the same as we have done with every other folder/file that we have defined.
 
 We should make those now so meteor doesn't yell at us.
 
