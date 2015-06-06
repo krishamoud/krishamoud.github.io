@@ -799,22 +799,21 @@ Template.profileFeed.events({
         var story = $('textarea[name="new-post"]').val();
         if(story.length) {
             Stories.insert({
-                createdBy: currentUser._id,
-                createdFor: profileUser._id,
-                userImage: currentUser.profile.picture.thumbnail,
-                storyImage: null,
-                storyText: story,
-                creatorName: currentUser.profile.name.first + " " + currentUser.profile.name.last,
-                creatorUsername: currentUser.profile.username,
-                creatorThumbnail: currentUser.profile.picture.thumbnail,
-                createdForName: profileUser.profile.name.first + " " + profileUser.profile.name.last,
-                createdForUsername: profileUser.profile.username,
-                createdForThumbnail: profileUser.profile.picture.thumbnail,
-                likes: [],
-                createdAt: new Date(),
-                comments: []
+                createdBy: currentUser._id, // the Meteor.userId()
+                createdFor: profileUser._id, // the owner of the profile
+                storyImage: null, // for the future we can add images in our story
+                storyText: story, // the text that is the story
+                creatorName: currentUser.profile.name.first + " " + currentUser.profile.name.last, // the creator
+                creatorUsername: currentUser.profile.username, // so we can link to the creators profile
+                creatorThumbnail: currentUser.profile.picture.thumbnail, // so we can have a picture in the story
+                createdForName: profileUser.profile.name.first + " " + profileUser.profile.name.last, // the person recieving the post
+                createdForUsername: profileUser.profile.username, // so we can link to the recievers profile
+                createdForThumbnail: profileUser.profile.picture.thumbnail, // so we can see the recievers picture
+                likes: [], // so we can see who's liked the post
+                createdAt: new Date(), // good practice IMO
+                comments: [] // comment array
             });
-            $('textarea[name="new-post"]').val("");
+            $('textarea[name="new-post"]').val(""); // reset the text box when done
         }
 
     }
@@ -829,12 +828,70 @@ Template.profileFeed.helpers({
         } else {
             return "Post to their wall!";
         }
-    },
-    stories:function(){
-        var profileUser = Meteor.users.findOne({username:Router.current().params.username}, {fields: {_id:1}});
-        return profileUser ? Stories.find({createdFor: profileUser._id}, {sort: {createdAt:-1}, limit: 10}) : [];
     }
+})
+{% endhighlight %}
+
+Ok, there are **two** main things happening here.  I'll go over the `statusPlaceholder` first.  
+
+All `statusPlaceholder` is doing is telling whether or not you are on your own page or of a different users' page.  Then you should replace your current `textarea` on `profileFeed.html` with 
+
+`<textarea class="form-control" name="new-post" placeholder="{{statusPlaceholder}}"></textarea>` 
+
+All that's happening is you are being returned the correct string from the function.
+
+The `click .newPost` is much more interesting.  What's happening first is we get the profile owner's _id, then we get the current logged in users' _id that way we can know if he or she is posting to someone else' wall or their own.  
+
+The fields have all been commented on why they are in the document.
+
+You can now create stories!
+#### Showing the stories
+
+There are three pretty simple steps to accomplish this.
+
+Step 1: create a publication
+
+In `server/publications/userPublications.js` add the following lines.
+
+{% highlight javascript %}
+Meteor.publish("profileStories", function(username){
+    var user = Meteor.users.findOne({username:username}, {fields: {_id:1}});
+    return Stories.find({createdFor: user._id});
+})
+{% endhighlight %}
+
+This is pretty straighforward.  It's finding the user based on the username because we are going to have access to the username in the url.  After that it finds the stories *created for* that user and returns them.
+
+Step 2: subscribe on the client side.
+
+In `client/views/profile/profileFeed/profileFeed.js` add the following code.
+
+{% highlight javascript %}
+Template.profileFeed.onCreated(function(){
+    var self = this;
+    Tracker.autorun(function(){
+        var username = Router.current().params.username;
+        self.subscribe("profileStories", username);
+    })
 
 })
 {% endhighlight %}
+
+This is a block that happens once the `profileFeed.html` template is created.  It will subscribe to `"profileStories"` with the username in the router as the first argument.  I put the username inside the autorun function so that if the user visits another profile page immediately after landing on the profile page the first time.  If it is not inside the autorun function then the subscription will never resubscribe and you will have the incorrect documents for the second profile page.
+
+Step 3: render the stories in html
+
+Inside `client/views/profile/profileFeed/profileFeed.js` we now need to return the correct `stories`
+
+Add this code to `profileFeed.js` inside the `Template.profileFeed.helpers`
+{% highlight javascript %}
+stories:function(){
+        var profileUser = Meteor.users.findOne({username:Router.current().params.username}, {fields: {_id:1}});
+        return profileUser ? Stories.find({createdFor: profileUser._id}, {sort: {createdAt:-1}, limit: 10}) : [];
+    }
+{% endhighlight %}
+
+This is getting the profile user first, then if the user exists (more a thing for the template to have time to retirve the user doc) it returns the stories that were `createdFor` the profile user.  It orders them from most recent to least recent and limits it to 10 documents.
+
+
 **to be continued**
