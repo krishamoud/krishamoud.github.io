@@ -936,7 +936,7 @@ The template will look like this.
         </div>
     </div>
 </template>
-{% endhighligh %}
+{% endhighlight %}
 
 This should start to look familiar but the basics are 
 **to be continued**
