@@ -893,5 +893,50 @@ stories:function(){
 
 This is getting the profile user first, then if the user exists (more a thing for the template to have time to retirve the user doc) it returns the stories that were `createdFor` the profile user.  It orders them from most recent to least recent and limits it to 10 documents.
 
+Now we have to render it in our html but since the stoires are going to look the same on a profile page as they will on the "feed" we can create a template for them.
 
+The template will look like this.  
+
+{% highlight html %}
+<template name="story">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {% raw %}
+            {{#if status}}
+                <h4> <a href="/profile/{{creatorUsername}}"><img src="{{userImage}}" width="28px;" height="28px;"> {{creatorName}} </a></h4>
+            {{else}}
+           
+                <h4>
+                    <a href="/profile/{{creatorUsername}}">
+                        <img src="{{creatorThumbnail}}" alt="" width="28px;" height="28px;">
+                        {{creatorName}}
+                    </a>
+                    <span class="glyphicon glyphicon-arrow-right"></span>
+                    <a href="/profile/{{createdForUsername}}">
+                        <img src="{{createdForThumbnail}}" alt="" width="28px;" height="28px;">
+                        {{createdForName}}
+                    </a>
+                </h4>
+            {{/if}}
+        </div>
+        <div class="panel-body">
+            <h4>
+                {{storyText}}</h4>
+            <div class="clearfix"></div>
+            <form>
+                <label>{{likeCount _id}}</label>
+         {% endraw %}
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default like">+1</button>
+                    </div>
+                    <input class="form-control" placeholder="Add a comment.." type="text">
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+{% endhighligh %}
+
+This should start to look familiar but the basics are 
 **to be continued**
