@@ -64,7 +64,7 @@ Go to your AWS console and go to the EC2 Container Service link.
 
 It should have a getting started button at the bottom.  If it doesn't then go to this link.
 
-https://us-west-2.console.aws.amazon.com/ecs/home?region=us-west-2#/getStarted
+<https://us-west-2.console.aws.amazon.com/ecs/home?region=us-west-2#/getStarted>
 
 (use your correct region if us-west-2 isn't your region)
 
