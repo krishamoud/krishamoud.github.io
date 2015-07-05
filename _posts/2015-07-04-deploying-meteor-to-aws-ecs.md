@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title: Deploying a MeteorJS app to ECS
