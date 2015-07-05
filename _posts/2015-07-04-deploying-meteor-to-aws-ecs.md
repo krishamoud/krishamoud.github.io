@@ -100,7 +100,7 @@ Click next step.
 
 You should now be on Step: 3
 
-Make sure that `desired number of tasks` is set to 1 and change the `service name` to whatever you want.
+Make sure that `desired number of tasks` is set to 1 and change the `service name` to whatever you want (cannot have multiple with the same name in the same cluster).
 
 Make sure `Container: Port` is set to `No ELB`
 
