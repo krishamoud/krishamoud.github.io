@@ -2,7 +2,7 @@
 
 title:            Kris Hamoud Makes Things
 locale:           en_US
-url:              //krishamoud.github.io
+url:              http://krishamoud.me
 
 
 # Jekyll configuration
@@ -29,7 +29,7 @@ owner:
   name: Kris Hamoud
   avatar: https://avatars3.githubusercontent.com/u/5006294
   bio: "I have been using meteor since version 0.5.0 and I have enjoyed every day of it."
-  email: kris@sunsama.com
+  email: kris.hamoud@gmail.com
   disqus-shortname: 
   twitter: krishamoud
   facebook: 
